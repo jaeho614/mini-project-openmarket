@@ -1,6 +1,7 @@
 import { MESSAGES } from "../constants/messages.js";
 
 export class Validator {
+  // 구매회원, 판매회원 공통
   static validateUsername(username) {
     if (!username || username.length < 3) {
       return MESSAGES.ERROR.USERNAME_REQUIRED;
@@ -14,6 +15,13 @@ export class Validator {
   static validatePassword(password) {
     if (!password || password.length < 6) {
       return MESSAGES.ERROR.PASSWORD_REQUIRED;
+    }
+    return null;
+  }
+
+  static validatePasswordMatch(password, confirmPassword) {
+    if (password !== confirmPassword) {
+      return MESSAGES.ERROR.PASSWORD_MISMATCH;
     }
     return null;
   }
@@ -35,6 +43,7 @@ export class Validator {
     return null;
   }
 
+  // 판매회원
   static validateCompanyRegistrationNumber(number) {
     if (!number || number.trim().length === 0) {
       return MESSAGES.ERROR.COMPANY_REQUIRED;
@@ -45,13 +54,6 @@ export class Validator {
   static validateStoreName(storeName) {
     if (!storeName || storeName.trim().length < 2) {
       return MESSAGES.ERROR.STORE_REQUIRED;
-    }
-    return null;
-  }
-
-  static validatePasswordMatch(password, confirmPassword) {
-    if (password !== confirmPassword) {
-      return MESSAGES.ERROR.PASSWORD_MISMATCH;
     }
     return null;
   }

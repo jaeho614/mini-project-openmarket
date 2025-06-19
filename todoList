@@ -1,4 +1,6 @@
-1. sementic tag 사용
-2. 코드 간격 정리
+1. sementic tag 안된 부분들 수정 필요
+2. 코드 indent 정리
 3. JS DOC 사용 및 주석 정리
 4. 함수명 변수명 체크
+5. header 높이가 login / logout에 따라 다름. 로그아웃시 페이지 변화가 부자연스러움
+6. home의 product list가 rendering시 loading으로 넘어갔다가 제품을 불러올 경우 사이즈 변화로 부자연스러움을 발생시킴

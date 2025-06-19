@@ -1,8 +1,4 @@
-import { createHeader } from "../components/headerComponent.js";
-import {
-  createFooter,
-  attachFooterEvents,
-} from "../components/footerComponent.js";
+import { attachFooterEvents } from "../components/footerComponent.js";
 import { createInput, createAlert } from "../components/formComponent.js";
 import { AuthAPI } from "../api/auth.js";
 import { AuthManager } from "../utils/auth.js";
@@ -27,16 +23,10 @@ export function SignupPage(stateManager) {
     return;
   }
 
-  const { loading, error } = stateManager.state;
-
   document.getElementById("app").innerHTML = `
-        ${createHeader(stateManager)}
         <main class="container">
             <div class="card" style="max-width: 600px; margin: 0 auto;">
                 <h2 class="text-center mb-20">회원가입</h2>
-                
-                ${error ? createAlert(error, "error") : ""}
-                
                 <div class="form-group">
                     <label>회원 유형 선택 <span style="color: red;">*</span></label>
                     <div class="grid grid-2">
@@ -115,11 +105,9 @@ export function SignupPage(stateManager) {
                           false
                         )}
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary" style="width: 100%;" ${
-                      loading ? "disabled" : ""
-                    }>
-                        ${loading ? MESSAGES.LOADING.SIGNUP : "회원가입"}
+                    <div id="signup-error-container" class="error-space"></div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        회원가입
                     </button>
                 </form>
                 
@@ -131,7 +119,6 @@ export function SignupPage(stateManager) {
                 </div>
             </div>
         </main>
-        ${createFooter()}
     `;
 
   document.querySelectorAll('input[name="userType"]').forEach(radio => {
@@ -147,6 +134,20 @@ export function SignupPage(stateManager) {
 
   handleUserTypeChange({ target: { value: "buyer" } });
   attachFooterEvents();
+}
+
+// SignupPage용 에러 메시지 표시 함수
+function showSignupErrorMessage(message) {
+  const errorContainer = document.getElementById("signup-error-container");
+  const errorHTML = createAlert(message, "error");
+  errorContainer.innerHTML = errorHTML;
+}
+
+function hideSignupErrorMessage() {
+  const errorContainer = document.getElementById("signup-error-container");
+  if (errorContainer) {
+    errorContainer.innerHTML = "";
+  }
 }
 
 function handleUserTypeChange(e) {
@@ -212,44 +213,57 @@ async function handleSignup(e, stateManager) {
     userData.store_name = formData.get("store_name").trim();
   }
 
-  const errors = [];
-
   const usernameError = Validator.validateUsername(userData.username);
-  if (usernameError) errors.push(usernameError);
+  if (usernameError) {
+    showSignupErrorMessage(usernameError);
+    return;
+  }
 
   const passwordError = Validator.validatePassword(userData.password);
-  if (passwordError) errors.push(passwordError);
+  if (passwordError) {
+    showSignupErrorMessage(passwordError);
+    return;
+  }
 
   const passwordMatchError = Validator.validatePasswordMatch(
     userData.password,
     formData.get("confirmPassword")
   );
-  if (passwordMatchError) errors.push(passwordMatchError);
+  if (passwordMatchError) {
+    showSignupErrorMessage(passwordMatchError);
+    return;
+  }
 
   const nameError = Validator.validateName(userData.name);
-  if (nameError) errors.push(nameError);
+  if (nameError) {
+    showSignupErrorMessage(nameError);
+    return;
+  }
 
   const phoneError = Validator.validatePhoneNumber(userData.phone_number);
-  if (phoneError) errors.push(phoneError);
+  if (phoneError) {
+    showSignupErrorMessage(phoneError);
+    return;
+  }
 
   if (userType === "seller") {
     const companyError = Validator.validateCompanyRegistrationNumber(
       userData.company_registration_number
     );
-    if (companyError) errors.push(companyError);
+    if (companyError) {
+      showSignupErrorMessage(companyError);
+      return;
+    }
 
     const storeError = Validator.validateStoreName(userData.store_name);
-    if (storeError) errors.push(storeError);
-  }
-
-  if (errors.length > 0) {
-    stateManager.setError(errors[0]);
-    return;
+    if (storeError) {
+      showSignupErrorMessage(storeError);
+      return;
+    }
   }
 
   try {
-    stateManager.setLoading(true);
-    stateManager.clearError();
+    hideSignupErrorMessage();
 
     let response;
     if (userType === "buyer") {
@@ -258,6 +272,7 @@ async function handleSignup(e, stateManager) {
       response = await AuthAPI.signupSeller(userData);
     }
 
+    // 자동 로그인
     const loginResponse = await AuthAPI.login({
       username: userData.username,
       password: userData.password,
@@ -265,13 +280,10 @@ async function handleSignup(e, stateManager) {
 
     AuthManager.setTokens(loginResponse.access, loginResponse.refresh);
     AuthManager.setUser(loginResponse.user);
-
     stateManager.setUser(loginResponse.user);
 
     window.router.navigate("#/");
   } catch (error) {
-    stateManager.setError(error.message);
-  } finally {
-    stateManager.setLoading(false);
+    showSignupErrorMessage(error.message);
   }
 }

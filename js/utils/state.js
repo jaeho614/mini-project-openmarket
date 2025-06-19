@@ -27,20 +27,13 @@ export class StateManager {
     this.previousState = { ...this.state };
     this.state = { ...this.state, ...newState };
 
-    const importantChanges = changedKeys.some(key =>
-      ["user", "isAuthenticated"].includes(key)
-    );
-
-    if (importantChanges) {
-      this.notifyListeners();
-    }
+    this.notifyListeners();
   }
 
   notifyListeners() {
     if (this.isNotifying) return;
 
     this.isNotifying = true;
-
     this.listeners.forEach(listener => {
       try {
         listener(this.state);
@@ -48,7 +41,6 @@ export class StateManager {
         console.error("State listener error:", error);
       }
     });
-
     this.isNotifying = false;
   }
 
@@ -57,20 +49,20 @@ export class StateManager {
   }
 
   setLoading(loading) {
-    this.state = { ...this.state, loading };
+    this.setState({ loading });
   }
 
   setError(error) {
-    this.state = { ...this.state, error };
+    this.setState({ error });
   }
 
   clearError() {
-    this.state = { ...this.state, error: null };
+    this.setState({ error: null });
   }
 
   setCurrentPage(page) {
     if (this.state.currentPage === page) return;
-    this.state = { ...this.state, currentPage: page };
+    this.setState({ currentPage: page });
   }
 
   logout() {
