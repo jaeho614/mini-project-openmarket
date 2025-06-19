@@ -1,75 +1,66 @@
 export function createFooter() {
-  const currentYear = new Date().getFullYear();
-
   return `
-        <footer style="background: #f8f9fa; border-top: 1px solid #dee2e6; margin-top: 40px;">
-            <div class="container" style="padding: 40px 20px;">
-                <div class="grid grid-3">
-                    <div>
-                        <h4 style="margin-bottom: 15px; color: #333;">오픈마켓</h4>
-                        <p style="color: #666; line-height: 1.6;">
-                            다양한 상품을 한 곳에서 만나보세요.<br>
-                            구매자와 판매자 모두에게<br>
-                            최고의 경험을 제공합니다.
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <h5 style="margin-bottom: 15px; color: #333;">고객 서비스</h5>
-                        <ul style="list-style: none; padding: 0; line-height: 2;">
-                            <li><a href="#" style="color: #666; text-decoration: none;">공지사항</a></li>
-                            <li><a href="#" style="color: #666; text-decoration: none;">자주 묻는 질문</a></li>
-                            <li><a href="#" style="color: #666; text-decoration: none;">고객센터</a></li>
-                            <li><a href="#" style="color: #666; text-decoration: none;">배송 안내</a></li>
-                            <li><a href="#" style="color: #666; text-decoration: none;">환불/교환</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h5 style="margin-bottom: 15px; color: #333;">회사 정보</h5>
-                        <ul style="list-style: none; padding: 0; line-height: 2;">
-                            <li><a href="#" style="color: #666; text-decoration: none;">회사 소개</a></li>
-                            <li><a href="#" style="color: #666; text-decoration: none;">이용약관</a></li>
-                            <li><a href="#" style="color: #666; text-decoration: none;">개인정보처리방침</a></li>
-                            <li><a href="#" style="color: #666; text-decoration: none;">판매자 입점</a></li>
-                            <li><a href="#" style="color: #666; text-decoration: none;">광고 문의</a></li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <hr style="margin: 30px 0; border: none; border-top: 1px solid #dee2e6;">
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-                    <div style="color: #666; font-size: 14px;">
-                        <p style="margin: 0;">
-                            © ${currentYear} 오픈마켓. All rights reserved.
-                        </p>
-                        <p style="margin: 5px 0 0 0; font-size: 12px;">
-                            서울특별시 강남구 테헤란로 123 | 대표전화: 1588-1234 | 이메일: support@openmarket.com
-                        </p>
-                    </div>
-                    
-                    <div style="display: flex; gap: 15px;">
-                        <a href="#" style="color: #666; text-decoration: none; font-size: 14px;">Facebook</a>
-                        <a href="#" style="color: #666; text-decoration: none; font-size: 14px;">Instagram</a>
-                        <a href="#" style="color: #666; text-decoration: none; font-size: 14px;">Twitter</a>
-                        <a href="#" style="color: #666; text-decoration: none; font-size: 14px;">YouTube</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        <footer class="bg-gray-100 border-t border-gray-200 py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+        <!-- 상단 링크 섹션 -->
+        <div class="flex flex-wrap justify-center items-center gap-1 text-sm text-gray-600 mb-6">
+          <a href="#" class="hover:text-gray-900 transition-colors">호두넛 소개</a>
+          <span class="text-gray-400">|</span>
+          <a href="#" class="hover:text-gray-900 transition-colors">이용약관</a>
+          <span class="text-gray-400">|</span>
+          <a href="#" class="hover:text-gray-900 transition-colors">개인정보처리방침</a>
+          <span class="text-gray-400">|</span>
+          <a href="#" class="hover:text-gray-900 transition-colors">전자금융거래약관</a>
+          <span class="text-gray-400">|</span>
+          <a href="#" class="hover:text-gray-900 transition-colors">청소년보호정책</a>
+          <span class="text-gray-400">|</span>
+          <a href="#" class="hover:text-gray-900 transition-colors">제휴문의</a>
+        </div>
+
+        <!-- 회사 정보 섹션 -->
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center">
+
+          <!-- 회사 정보 -->
+          <div class="text-sm text-gray-600 space-y-1 mb-4 lg:mb-0">
+            <div class="font-semibold text-gray-800">(주)HODU SHOP</div>
+            <div>제주특별자치도 제주시 동광로 137 제주코리아마이스하우스</div>
+            <div>사업자 번호: 000-0000-0000 | 통신판매업</div>
+            <div>대표: 김호두</div>
+          </div>
+
+          <!-- 소셜 미디어 아이콘 -->
+          <div class="flex gap-3">
+
+            <!-- Instagram -->
+            <a href="#" class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center hover:opacity-80 transition-colors">
+                <img src="./assets/icons/icon-insta.svg" alt="" />
+            </a>
+
+            <!-- Facebook -->
+            <a href="#" class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center hover:opacity-80 transition-colors">
+              <img src="./assets/icons/icon-fb.svg" alt="" />
+            </a>
+
+            <!-- YouTube -->
+            <a href="#" class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center hover:opacity-80 transition-colors">
+              <img src="./assets/icons/icon-yt.svg" alt="" />
+            </a>
+          </div>
+        </div>
+      </div>
     `;
 }
 
 export function attachFooterEvents() {
   document.querySelectorAll("footer a").forEach(link => {
     link.addEventListener("click", e => {
-      if (link.getAttribute("href") === "#") {
-        e.preventDefault();
-        console.log("준비 중인 페이지입니다.");
+      const href = link.getAttribute("href");
+      const text = link.textContent.trim();
 
-        const linkText = link.textContent;
-        alert(`"${linkText}" 페이지는 준비 중입니다.`);
+      if (href === "#" && text) {
+        e.preventDefault();
+        alert(`"${text}" 페이지는 준비 중입니다.`);
       }
     });
   });
