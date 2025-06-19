@@ -1,5 +1,8 @@
 import { createHeader } from "../components/headerComponent.js";
-import { createFooter } from "../components/footerComponent.js";
+import {
+  attachFooterEvents,
+  createFooter,
+} from "../components/footerComponent.js";
 import { ProductAPI } from "../api/product.js";
 
 export function HomePage(stateManager) {
@@ -95,9 +98,9 @@ export function HomePage(stateManager) {
 
   // 캐러셀 초기화 (배열 데이터 전달)
   initCarousel(carouselSlides);
-
   // 상품 목록 로드
   loadProducts(stateManager);
+  attachFooterEvents();
 }
 
 // 캐러셀 기능 구현
