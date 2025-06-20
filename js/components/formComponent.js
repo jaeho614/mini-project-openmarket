@@ -1,23 +1,16 @@
 import { SecurityUtils } from "../utils/security.js";
 
-export function createInput(
-  id,
-  label,
-  type = "text",
-  placeholder = "",
-  required = false
-) {
+export function createSingUpInput(id, label, type = "text", required = false) {
   return `
         <div class="form-group">
-            <label class="sr-only" for="${id}">
-                ${label} ${required ? '<span style="color: red;">*</span>' : ""}
+            <label for="${id}">
+                ${required ? '<span style="color: red;">*</span>' : ""} ${label}
             </label>
             <input 
                 type="${type}" 
                 id="${id}" 
                 name="${id}"
-                placeholder="${placeholder}"
-                class="form-control"
+                class="form-control mt-[10px]"
                 ${required ? "required" : ""}
             >
         </div>
@@ -34,7 +27,7 @@ export function createLoginInput(
   return `
         <div class="form-group">
             <label class="sr-only" for="${id}">
-                ${label} ${required ? '<span style="color: red;">*</span>' : ""}
+                ${label}
             </label>
             <input 
                 type="${type}" 
@@ -57,16 +50,20 @@ export function createAlert(message, type = "error") {
     `;
 }
 
-export function createButton(
+export function createActionButton(
+  id,
   text,
   type = "button",
-  className = "btn btn-primary",
+  px,
+  py,
+  className = "btn",
   disabled = false
 ) {
   return `
         <button 
+            id="${id}"
             type="${type}" 
-            class="${className}"
+            class="${className} w-full px-${px} py-${py} bg-[#21BF48] text-white rounded-md hover:opacity-80  focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200"
             ${disabled ? "disabled" : ""}
         >
             ${text}

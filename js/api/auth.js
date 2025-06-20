@@ -17,6 +17,7 @@ export class AuthAPI {
 
     try {
       let response = await fetch(url, config);
+      // console.log("API RES :", response);
 
       if (response.status === 401 && AuthManager.getRefreshToken()) {
         const newToken = await this.refreshToken();
@@ -27,6 +28,12 @@ export class AuthAPI {
       }
 
       const data = await response.json();
+      console.log("API DATA: ", data);
+
+      // 핸드폰 중복 확인
+      if (data.phone_number) {
+        throw new Error(data.phone_number);
+      }
 
       if (!response.ok) {
         throw new Error(data.error || `HTTP error! status: ${response.status}`);
@@ -34,7 +41,7 @@ export class AuthAPI {
 
       return data;
     } catch (error) {
-      console.error("API Error:", error);
+      // console.log("API ERROR: ", error);
       throw error;
     }
   }

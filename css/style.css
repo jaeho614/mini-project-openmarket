@@ -17,21 +17,14 @@ body {
 }
 
 .btn {
-  padding: 10px 20px;
   border: none;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
-  margin: 5px;
 }
 
 .btn-primary {
   background: #007bff;
-  color: white;
-}
-
-.btn-secondary {
-  background: #6c757d;
   color: white;
 }
 
@@ -64,9 +57,7 @@ body {
 }
 
 .alert-success {
-  background: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  color: #21bf48;
 }
 
 .header {

@@ -2,8 +2,9 @@ import { attachFooterEvents } from "../components/footerComponent.js";
 import { createLoginInput, createAlert } from "../components/formComponent.js";
 import { AuthAPI } from "../api/auth.js";
 import { AuthManager } from "../utils/auth.js";
-import { Validator } from "../utils/validation.js";
+import { LoginValidator } from "../utils/validation.js";
 import { MESSAGES } from "../constants/messages.js";
+import { createButton } from "../components/buttonComponent.js";
 
 export function LoginPage(stateManager) {
   if (AuthManager.isAuthenticated()) {
@@ -53,9 +54,7 @@ export function LoginPage(stateManager) {
                     true
                   )}
                   <div id="error-container" class="error-space"></div>
-                  <button type="submit" class="w-full bg-green-500 text-white py-3 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200">
-                      로그인
-                  </button>
+                  ${createButton("로그인", "submit", "3", "4")}
               </form>
             
             <div class="mt-6 text-center text-sm">
@@ -73,7 +72,7 @@ export function LoginPage(stateManager) {
     `;
 
   // 탭 전환 기능 초기화
-  initTabs();
+  initLoginTabs();
 
   document
     .getElementById("loginForm")
@@ -82,7 +81,7 @@ export function LoginPage(stateManager) {
 }
 
 // 탭 전환 기능
-function initTabs() {
+function initLoginTabs() {
   const buyerTab = document.getElementById("buyer-tab");
   const sellerTab = document.getElementById("seller-tab");
 
@@ -138,8 +137,8 @@ async function handleLogin(e, stateManager) {
     password: formData.get("password"),
   };
 
-  const usernameError = Validator.validateUsername(credentials.username);
-  const passwordError = Validator.validatePassword(credentials.password);
+  const usernameError = LoginValidator.validateUsername(credentials.username);
+  const passwordError = LoginValidator.validatePassword(credentials.password);
 
   if (usernameError) {
     showLoginErrorMessage(usernameError);

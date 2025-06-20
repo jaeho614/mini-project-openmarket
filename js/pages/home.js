@@ -6,7 +6,7 @@ import {
 import { ProductAPI } from "../api/product.js";
 
 export function HomePage(stateManager) {
-  // 캐러셀 데이터 배열 (임의로 생성)
+  // 캐러셀 더미 데이터
   const carouselSlides = [
     { title: "제품-1", bgColor: "bg-gray-200" },
     { title: "제품-2", bgColor: "bg-gray-300" },
@@ -109,7 +109,7 @@ function initCarousel(slidesData) {
   const slides = document.querySelectorAll(".carousel-slide");
   const indicators = document.querySelectorAll(".carousel-indicator");
   const track = document.getElementById("carousel-track");
-  const totalSlides = slidesData.length; // 배열 길이 사용
+  const totalSlides = slidesData.length;
 
   // 슬라이드 이동 함수
   function goToSlide(slideIndex) {
@@ -117,14 +117,12 @@ function initCarousel(slidesData) {
     const translateX = -slideIndex * 100;
     track.style.transform = `translateX(${translateX}%)`;
 
-    // 인디케이터 업데이트 (크기 변경 포함)
+    // 인디케이터 업데이트
     indicators.forEach((indicator, index) => {
       if (index === slideIndex) {
-        // 활성 인디케이터: 크기 크게, 불투명도 100%
         indicator.classList.remove("bg-opacity-60", "w-2", "h-2");
         indicator.classList.add("bg-opacity-100", "w-3", "h-3");
       } else {
-        // 비활성 인디케이터: 크기 작게, 불투명도 60%
         indicator.classList.remove("bg-opacity-100", "w-3", "h-3");
         indicator.classList.add("bg-opacity-60", "w-2", "h-2");
       }
@@ -155,8 +153,8 @@ function initCarousel(slidesData) {
   // 초기 상태 설정
   goToSlide(0);
 
-  // 자동 슬라이드 (선택사항)
-  setInterval(nextSlide, 5000); // 5초마다 자동 슬라이드
+  // 자동 슬라이드
+  setInterval(nextSlide, 5000);
 }
 
 // 상품 목록 로드 함수
@@ -194,7 +192,7 @@ async function loadProducts(stateManager, page = 1) {
 
     // 상품 카드 생성
     if (page === 1) {
-      gridEl.innerHTML = ""; // 첫 페이지는 기존 내용 지우기
+      gridEl.innerHTML = "";
     }
 
     response.results.forEach(product => {
