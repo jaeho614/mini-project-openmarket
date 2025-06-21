@@ -17,10 +17,6 @@ export class AuthAPI {
 
     try {
       let response = await fetch(url, config);
-      // console.log("API RES :", response);
-
-      const data = await response.json();
-      // console.log("API DATA: ", data);
 
       if (response.status === 401 && AuthManager.getRefreshToken()) {
         const newToken = await this.refreshToken();
@@ -30,13 +26,16 @@ export class AuthAPI {
         }
       }
 
+      const data = await response.json();
+      // console.log("REQUEST_DATA :", data);
+
       if (!response.ok) {
         throw new Error(data.error || `HTTP error! status: ${response.status}`);
       }
 
       return data;
     } catch (error) {
-      // console.log("API ERROR: ", error);
+      // console.log("REQUEST_ERROR :", error);
       throw error;
     }
   }
@@ -57,11 +56,19 @@ export class AuthAPI {
       let response = await fetch(url, config);
 
       const data = await response.json();
+      // console.log("SIGNUP_REQUEST_DATA :", data);
 
       // 핸드폰중복 확인...(수정필요..!)
       if (data.phone_number && !response.ok) {
         throw new Error(
           data.phone_number || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      if (data.company_registration_number && !response.ok) {
+        throw new Error(
+          data.company_registration_number ||
+            `HTTP error! status: ${response.status}`
         );
       }
 
@@ -79,6 +86,7 @@ export class AuthAPI {
 
       return data;
     } catch (error) {
+      // console.log("SIGNUP_REQUEST_ERROR :", error);
       throw error;
     }
   }

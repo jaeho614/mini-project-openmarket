@@ -1,7 +1,6 @@
 import {
   createSingUpInput,
   createAlert,
-  createActionButton,
   createSingUpPasswordInput,
 } from "../components/formComponent.js";
 import { AuthAPI } from "../api/auth.js";
@@ -36,12 +35,11 @@ export function SignupPage(stateManager) {
 function renderSignupHTML() {
   document.getElementById("app").innerHTML = `
     <main class="container">
-      <div class="card mx-auto px-4 py-8 max-w-md">
-        <!-- 로고 -->
-        <div class="text-center mb-8">
-          <img class="mx-auto h-16 w-auto" src="./assets/images/Logo-hodu.png" alt="HODU">
-        </div>
-
+    <!-- 로고 -->
+    <div class="text-center mb-8">
+      <img class="mt-10 mx-auto h-16 w-auto" src="./assets/images/Logo-hodu.png" alt="HODU">
+    </div>
+      <div class="card mx-auto px-4 py-8 max-w-md [box-shadow:0_2px_10px_rgba(0,0,0,0.1)]">
         <!-- 탭 메뉴 -->
         <div class="grid grid-cols-2 mb-8">
           <button id="signup-buyer-tab" class="signup-tab py-3 px-4 text-green-500 border-b-2 border-green-500 bg-white rounded-tl-lg font-medium">
@@ -57,9 +55,11 @@ function renderSignupHTML() {
           <!-- 공통 필드 -->
           <div id="commonFields">
             <!-- 아이디 -->
-            <div style="display: flex; gap: 10px;">
+            <div style="display: flex; gap: 10px; align-items: center;">
               ${createSingUpInput("username", "아이디", "text", true)}
-              ${createActionButton("validateUsernameBtn", "중복확인", "button")}
+              <button type="button" id="validateUsernameBtn" class="w-[150px] h-[46px] mt-[18px] px-4 py-2 bg-[#21BF48] text-white text-sm font-medium rounded-md hover:opacity-80 transition-colors duration-200 whitespace-nowrap">
+                  중복확인
+                </button>
             </div>
             <div id="usernameValidation" class="text-sm mt-1"></div>
 
@@ -124,9 +124,7 @@ function renderSignupHTML() {
             <div id="phoneValidation" class="text-sm mt-1"></div>
           </div>
 
-          <!-- 전체 에러 메시지 -->
-          <div id="signup-error-container" class="error-space"></div>
-
+          
           <!-- 판매자 전용 필드 -->
           <div id="sellerFields" style="display: none;">
             ${createSingUpInput(
@@ -136,30 +134,32 @@ function renderSignupHTML() {
               false
             )}
             <div id="companyValidation" class="text-sm mt-1"></div>
-
+            
             ${createSingUpInput("store_name", "스토어 이름", "text", false)}
             <div id="storeValidation" class="text-sm mt-1"></div>
-          </div>
-          
-          <!-- 이용약관 동의 -->
-          <div class="form-group">
+            </div>
+            
+            <!-- 이용약관 동의 -->
+            <div class="form-group">
             <div class="flex items-center space-x-2" id="agreement-container">
-              <input type="checkbox" id="agreement" name="agreement" class="form-checkbox">
-              <label for="agreement" class="text-sm">
-                <span style="color: red;">*</span>
-                <span class="text-green-600 underline cursor-pointer hover:opacity-70">이용약관</span> 및
+            <input type="checkbox" id="agreement" name="agreement" class="form-checkbox">
+            <label for="agreement" class="text-sm">
+            <span style="color: red;">*</span>
+            <span class="text-green-600 underline cursor-pointer hover:opacity-70">이용약관</span> 및
                 <span class="text-green-600 underline cursor-pointer hover:opacity-0">개인정보처리방침</span>에 대한 내용을 확인하였고 동의합니다.
               </label>
             </div>
             <div id="agreementValidation" class="text-sm mt-1"></div>
           </div>
-
+          
           <!-- 회원가입 버튼 -->
           <button type="submit" id="signupBtn" class="btn btn-primary w-full px-4 py-3 bg-gray-300 text-gray-500 rounded-md cursor-not-allowed transition-colors duration-200" disabled>
             가입하기
           </button>
         </form>
-      </div>
+        </div>
+        <!-- 전체 에러 메시지 -->
+        <div id="signup-error-container" class="error-space"></div>
     </main>
 
     <!-- 동의하기 툴팁 -->
@@ -613,8 +613,6 @@ function checkAllValidationsPassed(userType) {
   for (const validationId of validationIds) {
     const validationDiv = document.getElementById(validationId);
     if (validationDiv && validationDiv.innerHTML.trim()) {
-      // innerHTML이 있으면 에러 메시지가 있는 것
-      // 성공 메시지인지 에러 메시지인지 구분
       if (
         validationDiv.innerHTML.includes("text-red") ||
         validationDiv.innerHTML.includes("error")
@@ -658,7 +656,7 @@ function getValidationId(fieldId) {
 
 // 이벤트 리스너 등록
 function registerEventListeners(stateManager) {
-  // 아이디 중복확인 버튼
+  // 아이디 중복확인 이벤트
   document
     .getElementById("validateUsernameBtn")
     .addEventListener("click", () => handleUsernameValidation());

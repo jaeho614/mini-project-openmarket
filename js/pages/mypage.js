@@ -22,13 +22,13 @@ export function MyPage(stateManager) {
   }
 
   const { user } = stateManager.state;
+  console.log(user);
 
   document.getElementById("app").innerHTML = `
         ${createHeader(stateManager)}
         <main class="container">
             <div class="card">
-                <h3>대시보드</h3>
-                
+                <h3>마이페이지</h3>
                 <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
                     <h4>사용자 정보</h4>
                     <div class="grid grid-2">
