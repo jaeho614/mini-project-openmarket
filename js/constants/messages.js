@@ -1,7 +1,7 @@
 export const MESSAGES = {
   ERROR: {
     // 공통 필드
-    FIELD_REQUIRED: "해당 필드는 빈 값일 수 없습니다.",
+    FIELD_REQUIRED: "필수 정보입니다.",
 
     // 아이디
     USERNAME_INVALID:
@@ -45,7 +45,8 @@ export const MESSAGES = {
     NETWORK_ERROR: "네트워크 오류가 발생했습니다.",
   },
   SUCCESS: {
-    USERNAME_AVAILABLE: "사용 가능한 아이디입니다.",
+    USERNAME_AVAILABLE: "멋진 아이디네요 :)",
+    PHONE_AVAILABLE: "사용 가능한 번호입니다 :)",
     LOGIN_SUCCESS: "로그인되었습니다.",
     SIGNUP_SUCCESS: "회원가입이 완료되었습니다.",
   },

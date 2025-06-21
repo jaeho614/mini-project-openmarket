@@ -4,15 +4,45 @@ export function createSingUpInput(id, label, type = "text", required = false) {
   return `
         <div class="form-group">
             <label for="${id}">
-                ${required ? '<span style="color: red;">*</span>' : ""} ${label}
+                ${
+                  required ? '<span class="text-red-500">*</span>' : ""
+                } ${label}
             </label>
             <input 
                 type="${type}" 
                 id="${id}" 
                 name="${id}"
                 class="form-control mt-[10px]"
-                ${required ? "required" : ""}
-            >
+                ${required ? "required" : ""} />
+        </div>
+    `;
+}
+
+export function createSingUpPasswordInput(
+  id,
+  label,
+  type = "text",
+  required = false
+) {
+  return `
+        <div class="form-group">
+            <label for="${id}">
+                ${
+                  required ? '<span class="text-red-500">*</span>' : ""
+                } ${label}
+            </label>
+            <div class="relative">
+                <input 
+                    type="${type}" 
+                    id="${id}" 
+                    name="${id}"
+                    class="form-control mt-[10px]"
+                    ${required ? "required" : ""}
+                />
+                <div id="${id}-check-icon" class="absolute right-3 top-[33px] transform -translate-y-1/2 hidden">
+                    <img src="../../assets/icons/icon-check-on.svg" alt="비밀번호 확인" class="w-6 h-6" />
+                </div>
+            </div>
         </div>
     `;
 }
@@ -36,7 +66,7 @@ export function createLoginInput(
                 placeholder="${placeholder}"
                 class="w-full px-4 py-3 border-0 border-b border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 ${required ? "required" : ""}
-            >
+            />
         </div>
     `;
 }

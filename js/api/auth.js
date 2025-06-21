@@ -19,20 +19,15 @@ export class AuthAPI {
       let response = await fetch(url, config);
       // console.log("API RES :", response);
 
+      const data = await response.json();
+      // console.log("API DATA: ", data);
+
       if (response.status === 401 && AuthManager.getRefreshToken()) {
         const newToken = await this.refreshToken();
         if (newToken) {
           config.headers["Authorization"] = `Bearer ${newToken}`;
           response = await fetch(url, config);
         }
-      }
-
-      const data = await response.json();
-      console.log("API DATA: ", data);
-
-      // 핸드폰 중복 확인
-      if (data.phone_number) {
-        throw new Error(data.phone_number);
       }
 
       if (!response.ok) {
@@ -42,6 +37,48 @@ export class AuthAPI {
       return data;
     } catch (error) {
       // console.log("API ERROR: ", error);
+      throw error;
+    }
+  }
+
+  static async signupRequest(endpoint, options = {}) {
+    const url = `${API_CONFIG.BASE_URL}${endpoint}`;
+    const accessToken = AuthManager.getAccessToken();
+
+    const config = {
+      headers: {
+        ...API_CONFIG.HEADERS,
+        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+      },
+      ...options,
+    };
+
+    try {
+      let response = await fetch(url, config);
+
+      const data = await response.json();
+
+      // 핸드폰중복 확인...(수정필요..!)
+      if (data.phone_number && !response.ok) {
+        throw new Error(
+          data.phone_number || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      if (response.status === 401 && AuthManager.getRefreshToken()) {
+        const newToken = await this.refreshToken();
+        if (newToken) {
+          config.headers["Authorization"] = `Bearer ${newToken}`;
+          response = await fetch(url, config);
+        }
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return data;
+    } catch (error) {
       throw error;
     }
   }
@@ -90,7 +127,7 @@ export class AuthAPI {
   }
 
   static async signupBuyer(userData) {
-    return this.request(API_CONFIG.ENDPOINTS.BUYER_SIGNUP, {
+    return this.signupRequest(API_CONFIG.ENDPOINTS.BUYER_SIGNUP, {
       method: "POST",
       body: JSON.stringify({
         username: SecurityUtils.sanitizeInput(userData.username),
@@ -102,7 +139,7 @@ export class AuthAPI {
   }
 
   static async signupSeller(userData) {
-    return this.request(API_CONFIG.ENDPOINTS.SELLER_SIGNUP, {
+    return this.signupRequest(API_CONFIG.ENDPOINTS.SELLER_SIGNUP, {
       method: "POST",
       body: JSON.stringify({
         username: SecurityUtils.sanitizeInput(userData.username),

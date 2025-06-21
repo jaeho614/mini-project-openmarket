@@ -2,6 +2,7 @@ import {
   createSingUpInput,
   createAlert,
   createActionButton,
+  createSingUpPasswordInput,
 } from "../components/formComponent.js";
 import { AuthAPI } from "../api/auth.js";
 import { AuthManager } from "../utils/auth.js";
@@ -50,7 +51,7 @@ function renderSignupHTML() {
             판매회원가입
           </button>
         </div>
-        
+
         <!-- 회원가입 폼 -->
         <form id="signupForm" class="space-y-6">
           <!-- 공통 필드 -->
@@ -61,27 +62,32 @@ function renderSignupHTML() {
               ${createActionButton("validateUsernameBtn", "중복확인", "button")}
             </div>
             <div id="usernameValidation" class="text-sm mt-1"></div>
-            
+
             <!-- 비밀번호 -->
-            ${createSingUpInput("password", "비밀번호", "password", true)}
+            ${createSingUpPasswordInput(
+              "password",
+              "비밀번호",
+              "password",
+              true
+            )}
             <div id="passwordValidation" class="text-sm mt-1"></div>
-            
+
             <!-- 비밀번호 확인 -->
-            ${createSingUpInput(
+            ${createSingUpPasswordInput(
               "confirmPassword",
               "비밀번호 확인",
               "password",
               true
             )}
             <div id="confirmPasswordValidation" class="text-sm mt-1"></div>
-            
+
             <!-- 이름 -->
             ${createSingUpInput("name", "이름", "text", true)}
             <div id="nameValidation" class="text-sm mt-1"></div>
-            
+
             <!-- 휴대폰 번호 -->
             <div class="form-group">
-              <label for="phone_number">
+              <label for="phone-prefix">
                 <span style="color: red;">*</span> 휴대폰번호
               </label>
               <div class="flex gap-2 mt-[10px]">
@@ -93,20 +99,20 @@ function renderSignupHTML() {
                   <option value="018">018</option>
                   <option value="019">019</option>
                 </select>
-                <input 
-                  type="text" 
-                  id="phone-middle" 
-                  name="phone-middle" 
-                  class="form-control flex-1" 
+                <input
+                  type="text"
+                  id="phone-middle"
+                  name="phone-middle"
+                  class="form-control flex-1"
                   maxlength="4"
                   pattern="[0-9]{3,4}"
                   required
                 >
-                <input 
-                  type="text" 
-                  id="phone-last" 
-                  name="phone-last" 
-                  class="form-control flex-1" 
+                <input
+                  type="text"
+                  id="phone-last"
+                  name="phone-last"
+                  class="form-control flex-1"
                   maxlength="4"
                   pattern="[0-9]{4}"
                   required
@@ -117,7 +123,10 @@ function renderSignupHTML() {
             </div>
             <div id="phoneValidation" class="text-sm mt-1"></div>
           </div>
-          
+
+          <!-- 전체 에러 메시지 -->
+          <div id="signup-error-container" class="error-space"></div>
+
           <!-- 판매자 전용 필드 -->
           <div id="sellerFields" style="display: none;">
             ${createSingUpInput(
@@ -127,21 +136,40 @@ function renderSignupHTML() {
               false
             )}
             <div id="companyValidation" class="text-sm mt-1"></div>
-            
+
             ${createSingUpInput("store_name", "스토어 이름", "text", false)}
             <div id="storeValidation" class="text-sm mt-1"></div>
           </div>
           
-          <!-- 전체 에러 메시지 -->
-          <div id="signup-error-container" class="error-space"></div>
-          
+          <!-- 이용약관 동의 -->
+          <div class="form-group">
+            <div class="flex items-center space-x-2" id="agreement-container">
+              <input type="checkbox" id="agreement" name="agreement" class="form-checkbox">
+              <label for="agreement" class="text-sm">
+                <span style="color: red;">*</span>
+                <span class="text-green-600 underline cursor-pointer hover:opacity-70">이용약관</span> 및
+                <span class="text-green-600 underline cursor-pointer hover:opacity-0">개인정보처리방침</span>에 대한 내용을 확인하였고 동의합니다.
+              </label>
+            </div>
+            <div id="agreementValidation" class="text-sm mt-1"></div>
+          </div>
+
           <!-- 회원가입 버튼 -->
-          <button type="submit" class="btn btn-primary w-full px-4 py-3 bg-[#21BF48] text-white rounded-md hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200">
+          <button type="submit" id="signupBtn" class="btn btn-primary w-full px-4 py-3 bg-gray-300 text-gray-500 rounded-md cursor-not-allowed transition-colors duration-200" disabled>
             가입하기
           </button>
         </form>
       </div>
     </main>
+
+    <!-- 동의하기 툴팁 -->
+    <div id="agreement-tooltip" class="fixed bg-[#21BF48] text-white font-bold px-3 py-2 rounded shadow-lg text-sm z-50 hidden">
+      약관에 동의해주세요
+      <div class="absolute top-full left-2 w-0 h-0"
+     style="border-left: 0 solid transparent; 
+            border-right: 8px solid transparent; 
+            border-top: 8px solid #21BF48;"></div>
+    </div>
   `;
 }
 
@@ -155,6 +183,12 @@ function initializeSignupPage(stateManager) {
 
   // 실시간 유효성 검사 초기화
   initRealTimeValidation();
+
+  // 순차 입력 검증 초기화
+  initSequentialValidation();
+
+  // 버튼 상태 관리 초기화
+  initButtonStateManagement();
 
   // 이벤트 리스너 등록
   registerEventListeners(stateManager);
@@ -236,6 +270,75 @@ function handleUserTypeChange(userType) {
   }
 }
 
+// 순차 입력 검증 초기화
+function initSequentialValidation() {
+  const requiredFields = [
+    "username",
+    "password",
+    "confirmPassword",
+    "name",
+    "phone-middle",
+    "phone-last",
+  ];
+
+  requiredFields.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.addEventListener("focus", () => {
+        checkSequentialInput(fieldId);
+      });
+    }
+  });
+
+  // 판매자 필드도 추가
+  const sellerFields = ["company_registration_number", "store_name"];
+  sellerFields.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.addEventListener("focus", () => {
+        if (window.currentUserType === "seller") {
+          checkSequentialInput(fieldId, true);
+        }
+      });
+    }
+  });
+}
+
+// 순차 입력 확인
+function checkSequentialInput(currentFieldId, isSeller = false) {
+  const userType = window.currentUserType || "buyer";
+
+  // 기본 필드 순서
+  let fieldOrder = [
+    "username",
+    "password",
+    "confirmPassword",
+    "name",
+    "phone-middle",
+    "phone-last",
+  ];
+
+  // 판매자인 경우 필드 추가
+  if (userType === "seller") {
+    fieldOrder.push("company_registration_number", "store_name");
+  }
+
+  const currentIndex = fieldOrder.indexOf(currentFieldId);
+  if (currentIndex === -1) return;
+
+  // 현재 필드 이전의 모든 필드가 입력되었는지 확인
+  for (let i = 0; i < currentIndex; i++) {
+    const fieldId = fieldOrder[i];
+    const field = document.getElementById(fieldId);
+
+    if (field && !field.value.trim()) {
+      // 빈 필드에 에러 메시지 표시
+      const validationId = getValidationId(fieldId);
+      showFieldValidation(validationId, MESSAGES.ERROR.FIELD_REQUIRED);
+    }
+  }
+}
+
 // 필드 라벨 업데이트
 function updateFieldLabel(input, labelText, isRequired) {
   const label = input.previousElementSibling;
@@ -288,11 +391,26 @@ function initPhoneNumberInput() {
 
 // 실시간 유효성 검사 초기화
 function initRealTimeValidation() {
+  // 아이디 실시간 검사
+  const usernameInput = document.getElementById("username");
+  usernameInput.addEventListener("blur", () => {
+    const error = SignupValidator.validateUsername(usernameInput.value);
+    showFieldValidation("usernameValidation", error);
+  });
+
   // 비밀번호 실시간 검사
   const passwordInput = document.getElementById("password");
   passwordInput.addEventListener("blur", () => {
     const error = SignupValidator.validatePassword(passwordInput.value);
     showFieldValidation("passwordValidation", error);
+
+    // 체크 아이콘 토글
+    const checkIcon = document.getElementById("password-check-icon");
+    if (!error && passwordInput.value.trim()) {
+      checkIcon.classList.remove("hidden");
+    } else {
+      checkIcon.classList.add("hidden");
+    }
   });
 
   // 비밀번호 확인 실시간 검사
@@ -304,6 +422,18 @@ function initRealTimeValidation() {
       confirmPasswordInput.value
     );
     showFieldValidation("confirmPasswordValidation", error);
+
+    // 체크 아이콘 토글
+    const checkIcon = document.getElementById("confirmPassword-check-icon");
+    if (
+      !error &&
+      confirmPasswordInput.value.trim() &&
+      password === confirmPasswordInput.value
+    ) {
+      checkIcon.classList.remove("hidden");
+    } else {
+      checkIcon.classList.add("hidden");
+    }
   });
 
   // 이름 실시간 검사
@@ -349,6 +479,183 @@ function initRealTimeValidation() {
   }
 }
 
+// 버튼 상태 관리 초기화
+function initButtonStateManagement() {
+  const requiredFields = [
+    "username",
+    "password",
+    "confirmPassword",
+    "name",
+    "phone-middle",
+    "phone-last",
+  ];
+
+  const agreementCheckbox = document.getElementById("agreement");
+
+  // 모든 필드와 체크박스에 이벤트 리스너 추가
+  requiredFields.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.addEventListener("input", checkFormCompletion);
+      field.addEventListener("blur", checkFormCompletion);
+    }
+  });
+
+  // 전화번호 select도 추가
+  const phonePrefix = document.getElementById("phone-prefix");
+  if (phonePrefix) {
+    phonePrefix.addEventListener("change", checkFormCompletion);
+  }
+
+  // 동의 체크박스
+  if (agreementCheckbox) {
+    agreementCheckbox.addEventListener("change", checkFormCompletion);
+  }
+
+  // 판매자 필드들
+  const sellerFields = ["company_registration_number", "store_name"];
+  sellerFields.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.addEventListener("input", checkFormCompletion);
+      field.addEventListener("blur", checkFormCompletion);
+    }
+  });
+
+  // 탭 변경 시에도 체크
+  const buyerTab = document.getElementById("signup-buyer-tab");
+  const sellerTab = document.getElementById("signup-seller-tab");
+  if (buyerTab)
+    buyerTab.addEventListener("click", () =>
+      setTimeout(checkFormCompletion, 100)
+    );
+  if (sellerTab)
+    sellerTab.addEventListener("click", () =>
+      setTimeout(checkFormCompletion, 100)
+    );
+}
+
+// 폼 완성도 체크 및 버튼 상태 업데이트
+function checkFormCompletion() {
+  const userType = window.currentUserType || "buyer";
+  const signupBtn = document.getElementById("signupBtn");
+
+  if (!signupBtn) return;
+
+  // 1. 모든 필수 필드가 입력되었는지 확인
+  const allFieldsFilled = checkAllFieldsFilled(userType);
+
+  // 2. 모든 유효성 검사가 통과되었는지 확인
+  const allValidationsPassed = checkAllValidationsPassed(userType);
+
+  // 3. 동의 체크박스가 체크되었는지 확인
+  const agreementChecked =
+    document.getElementById("agreement")?.checked || false;
+
+  // 모든 조건이 만족되면 버튼 활성화
+  if (allFieldsFilled && allValidationsPassed && agreementChecked) {
+    enableSignupButton(signupBtn);
+  } else {
+    disableSignupButton(signupBtn);
+  }
+}
+
+// 모든 필수 필드가 입력되었는지 확인
+function checkAllFieldsFilled(userType) {
+  const commonFields = ["username", "password", "confirmPassword", "name"];
+  const phoneFields = ["phone-middle", "phone-last"];
+
+  // 공통 필드 체크
+  for (const fieldId of commonFields) {
+    const field = document.getElementById(fieldId);
+    if (!field || !field.value.trim()) {
+      return false;
+    }
+  }
+
+  // 전화번호 필드 체크
+  for (const fieldId of phoneFields) {
+    const field = document.getElementById(fieldId);
+    if (!field || !field.value.trim()) {
+      return false;
+    }
+  }
+
+  // 판매자 필드 체크
+  if (userType === "seller") {
+    const sellerFields = ["company_registration_number", "store_name"];
+    for (const fieldId of sellerFields) {
+      const field = document.getElementById(fieldId);
+      if (!field || !field.value.trim()) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+// 모든 유효성 검사가 통과되었는지 확인
+function checkAllValidationsPassed(userType) {
+  const validationIds = [
+    "usernameValidation",
+    "passwordValidation",
+    "confirmPasswordValidation",
+    "nameValidation",
+    "phoneValidation",
+  ];
+
+  if (userType === "seller") {
+    validationIds.push("companyValidation", "storeValidation");
+  }
+
+  // 각 validation div에 에러가 있는지 확인
+  for (const validationId of validationIds) {
+    const validationDiv = document.getElementById(validationId);
+    if (validationDiv && validationDiv.innerHTML.trim()) {
+      // innerHTML이 있으면 에러 메시지가 있는 것
+      // 성공 메시지인지 에러 메시지인지 구분
+      if (
+        validationDiv.innerHTML.includes("text-red") ||
+        validationDiv.innerHTML.includes("error")
+      ) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+// 가입하기 버튼 활성화
+function enableSignupButton(button) {
+  button.disabled = false;
+  button.className =
+    "btn btn-primary w-full px-4 py-3 bg-[#21BF48] text-white rounded-md hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200 cursor-pointer";
+}
+
+// 가입하기 버튼 비활성화
+function disableSignupButton(button) {
+  button.disabled = true;
+  button.className =
+    "btn btn-primary w-full px-4 py-3 bg-gray-300 text-gray-500 rounded-md cursor-not-allowed transition-colors duration-200";
+}
+
+// 필드 ID에 따른 validation ID 반환
+function getValidationId(fieldId) {
+  const validationMap = {
+    username: "usernameValidation",
+    password: "passwordValidation",
+    confirmPassword: "confirmPasswordValidation",
+    name: "nameValidation",
+    "phone-middle": "phoneValidation",
+    "phone-last": "phoneValidation",
+    company_registration_number: "companyValidation",
+    store_name: "storeValidation",
+  };
+  return validationMap[fieldId] || fieldId + "Validation";
+}
+
 // 이벤트 리스너 등록
 function registerEventListeners(stateManager) {
   // 아이디 중복확인 버튼
@@ -372,6 +679,9 @@ function showFieldValidation(validationId, error) {
       validationDiv.innerHTML = "";
     }
   }
+
+  // 유효성 검사 후 버튼 상태 업데이트
+  setTimeout(checkFormCompletion, 100);
 }
 
 // 필드 유효성 검사 메시지 제거
@@ -395,6 +705,29 @@ function hideSignupErrorMessage() {
   if (errorContainer) {
     errorContainer.innerHTML = "";
   }
+}
+
+// 동의하기 툴팁 표시
+function showAgreementTooltip() {
+  const agreementContainer = document.getElementById("agreement-container");
+  const tooltip = document.getElementById("agreement-tooltip");
+
+  if (!agreementContainer || !tooltip) {
+    console.warn("동의하기 툴팁 요소를 찾을 수 없습니다.");
+    return;
+  }
+
+  const rect = agreementContainer.getBoundingClientRect();
+
+  tooltip.style.left = `${rect.left}px`;
+  tooltip.style.top = `${rect.top - 45}px`;
+  tooltip.classList.remove("hidden");
+
+  setTimeout(() => {
+    if (tooltip) {
+      tooltip.classList.add("hidden");
+    }
+  }, 3000);
 }
 
 // 아이디 중복확인 처리
@@ -429,6 +762,16 @@ async function handleSignup(e, stateManager) {
   const formData = new FormData(e.target);
   const userType = window.currentUserType || "buyer";
 
+  // 동의하기 체크 확인
+  const agreementCheckbox = document.getElementById("agreement");
+  if (!agreementCheckbox || !agreementCheckbox.checked) {
+    if (agreementCheckbox) {
+      agreementCheckbox.focus();
+    }
+    showAgreementTooltip();
+    return;
+  }
+
   const userData = {
     username: formData.get("username").trim(),
     password: formData.get("password"),
@@ -448,7 +791,6 @@ async function handleSignup(e, stateManager) {
 
   if (validationResults.hasError) {
     showSignupErrorMessage("입력 정보를 확인해주세요.");
-    return;
   }
 
   try {
@@ -462,18 +804,10 @@ async function handleSignup(e, stateManager) {
       response = await AuthAPI.signupSeller(userData);
     }
 
-    // 가입 완료 후 자동 로그인
-    const loginResponse = await AuthAPI.login({
-      username: userData.username,
-      password: userData.password,
-    });
+    alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
 
-    AuthManager.setTokens(loginResponse.access, loginResponse.refresh);
-    AuthManager.setUser(loginResponse.user);
-    stateManager.setUser(loginResponse.user);
-
-    // 홈으로 이동
-    window.router.navigate("/");
+    // 로그인 페이지로 이동
+    window.router.navigate("/login");
   } catch (error) {
     handleSignupError(error);
   }
@@ -481,7 +815,6 @@ async function handleSignup(e, stateManager) {
 
 // 모든 필드 유효성 검사
 function validateAllFields(userData, formData, userType) {
-  console.log("validateAllFields 작동", userData, formData, userType);
   let hasError = false;
 
   // 아이디 검사
@@ -530,26 +863,55 @@ function validateAllFields(userData, formData, userType) {
 
 // 회원가입 에러 처리
 function handleSignupError(error) {
-  console.log("handleSignupError 작동", error);
-  if (error.message.includes("아이디") || error.message.includes("username")) {
-    showFieldValidation("usernameValidation", error.message);
-  } else if (
-    error.message.includes("전화번호") ||
-    error.message.includes("phone") ||
-    error.message.includes(MESSAGES.ERROR.PHONE_EXISTS)
-  ) {
-    showFieldValidation("phoneValidation", MESSAGES.ERROR.PHONE_EXISTS);
-  } else if (
-    error.message.includes("사업자") ||
-    error.message.includes("company")
-  ) {
-    showFieldValidation("companyValidation", error.message);
-  } else if (
-    error.message.includes("스토어") ||
-    error.message.includes("store")
-  ) {
-    showFieldValidation("storeValidation", error.message);
-  } else {
-    showSignupErrorMessage(error.message || MESSAGES.ERROR.SIGNUP_FAILED);
+  const errorMessage = error.message;
+
+  // 전화번호 패턴 체크 (010으로 시작하는 11자리 숫자)
+  const phonePattern = /^01[0-9]{9}$/;
+  if (phonePattern.test(errorMessage.trim())) {
+    showFieldValidation("phoneValidation", "이미 사용중인 전화번호입니다.");
+    return;
   }
+
+  // 필드별 키워드 매핑
+  const fieldErrorMap = [
+    {
+      keywords: ["아이디", "username", "사용자"],
+      validationId: "usernameValidation",
+    },
+    {
+      keywords: ["전화번호", "phone", "핸드폰", "휴대폰"],
+      validationId: "phoneValidation",
+    },
+    {
+      keywords: ["사업자", "company", "등록번호"],
+      validationId: "companyValidation",
+    },
+    {
+      keywords: ["스토어", "store", "상점"],
+      validationId: "storeValidation",
+    },
+    {
+      keywords: ["비밀번호", "password"],
+      validationId: "passwordValidation",
+    },
+    {
+      keywords: ["이름", "name"],
+      validationId: "nameValidation",
+    },
+  ];
+
+  // 에러 메시지를 기반으로 적절한 필드 찾기
+  for (const fieldError of fieldErrorMap) {
+    const hasKeyword = fieldError.keywords.some(keyword =>
+      errorMessage.toLowerCase().includes(keyword.toLowerCase())
+    );
+
+    if (hasKeyword) {
+      showFieldValidation(fieldError.validationId, errorMessage);
+      return;
+    }
+  }
+
+  // 특정 필드와 매치되지 않으면 전체 에러로 표시
+  showSignupErrorMessage(errorMessage || MESSAGES.ERROR.SIGNUP_FAILED);
 }
