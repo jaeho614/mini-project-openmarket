@@ -7,6 +7,7 @@ import { ProductAPI } from "../api/product.js";
 import { AuthManager } from "../utils/auth.js";
 import { SecurityUtils } from "../utils/security.js";
 import { redirectStorage } from "../utils/storage.js";
+import { loginRequestModal } from "../components/modalComponent.js";
 
 export function ProductDetailPage(stateManager) {
   // URL에서 상품 ID 추출
@@ -33,7 +34,7 @@ function renderProductDetailHTML() {
   document.getElementById("app").innerHTML = `
     ${createHeader(window.stateManager)}
     
-     <main class="max-w-7xl mx-auto px-4 py-8">
+    <main class="max-w-7xl mx-auto px-4 py-8">
       <!-- 로딩 상태 -->
       <div id="product-loading" class="text-center py-16">
         <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
@@ -364,10 +365,10 @@ function initializeProductDetailEvents(product, stateManager) {
   // 구매 버튼 이벤트
   buyNowBtn.addEventListener("click", () => {
     if (!AuthManager.isAuthenticated()) {
-      alert("로그인이 필요한 서비스입니다.");
-
-      // 현재 페이지 저장 후 로그인 페이지로 이동
-      redirectStorage.saveCurrentPageAndRedirectToLogin(window.router);
+      loginRequestModal.loginConfirm(() => {
+        // 현재 페이지 저장 후 로그인 페이지로 이동
+        redirectStorage.saveCurrentPageAndRedirectToLogin(window.router);
+      });
       return;
     }
 
@@ -377,10 +378,10 @@ function initializeProductDetailEvents(product, stateManager) {
   // 장바구니 버튼 이벤트
   addToCartBtn.addEventListener("click", () => {
     if (!AuthManager.isAuthenticated()) {
-      alert("로그인이 필요한 서비스입니다.");
-
-      // 현재 페이지 저장 후 로그인 페이지로 이동
-      redirectStorage.saveCurrentPageAndRedirectToLogin(window.router);
+      loginRequestModal.loginConfirm(() => {
+        // 현재 페이지 저장 후 로그인 페이지로 이동
+        redirectStorage.saveCurrentPageAndRedirectToLogin(window.router);
+      });
       return;
     }
 
