@@ -33,17 +33,17 @@ export function createFooter() {
           <div class="flex gap-3">
 
             <!-- Instagram -->
-            <a href="#" class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center hover:opacity-80 transition-colors">
+            <a href="#" id="instagram" class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center hover:opacity-80 transition-colors">
                 <img src="./assets/icons/icon-insta.svg" alt="" />
             </a>
 
             <!-- Facebook -->
-            <a href="#" class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center hover:opacity-80 transition-colors">
+            <a href="#" id="facebook" class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center hover:opacity-80 transition-colors">
               <img src="./assets/icons/icon-fb.svg" alt="" />
             </a>
 
             <!-- YouTube -->
-            <a href="#" class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center hover:opacity-80 transition-colors">
+            <a href="#" id="youtube" class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center hover:opacity-80 transition-colors">
               <img src="./assets/icons/icon-yt.svg" alt="" />
             </a>
           </div>
@@ -61,6 +61,11 @@ export function attachFooterEvents() {
       if (href === "#" && text) {
         e.preventDefault();
         alert(`"${text}" 페이지는 준비 중입니다.`);
+      } else {
+        const icon = link.getAttribute("id");
+        console.log(icon);
+        e.preventDefault();
+        alert(`${icon}는 준비 중입니다.`);
       }
     });
   });

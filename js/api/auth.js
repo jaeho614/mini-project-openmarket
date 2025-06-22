@@ -27,7 +27,6 @@ export class AuthAPI {
       }
 
       const data = await response.json();
-      // console.log("REQUEST_DATA :", data);
 
       if (!response.ok) {
         throw new Error(data.error || `HTTP error! status: ${response.status}`);
@@ -35,11 +34,11 @@ export class AuthAPI {
 
       return data;
     } catch (error) {
-      // console.log("REQUEST_ERROR :", error);
       throw error;
     }
   }
 
+  // 회원가입 요청(중복확인 때문에 분리..)
   static async signupRequest(endpoint, options = {}) {
     const url = `${API_CONFIG.BASE_URL}${endpoint}`;
     const accessToken = AuthManager.getAccessToken();
@@ -86,7 +85,6 @@ export class AuthAPI {
 
       return data;
     } catch (error) {
-      // console.log("SIGNUP_REQUEST_ERROR :", error);
       throw error;
     }
   }
@@ -117,6 +115,7 @@ export class AuthAPI {
     return null;
   }
 
+  // username 중복 확인
   static async validateUsername(username) {
     return this.request(API_CONFIG.ENDPOINTS.VALIDATE_USERNAME, {
       method: "POST",
@@ -124,6 +123,7 @@ export class AuthAPI {
     });
   }
 
+  // 로그인
   static async login(credentials) {
     return this.request(API_CONFIG.ENDPOINTS.LOGIN, {
       method: "POST",
@@ -134,6 +134,7 @@ export class AuthAPI {
     });
   }
 
+  // 구매자 회원가입
   static async signupBuyer(userData) {
     return this.signupRequest(API_CONFIG.ENDPOINTS.BUYER_SIGNUP, {
       method: "POST",
@@ -146,6 +147,7 @@ export class AuthAPI {
     });
   }
 
+  // 판매자 회원가입
   static async signupSeller(userData) {
     return this.signupRequest(API_CONFIG.ENDPOINTS.SELLER_SIGNUP, {
       method: "POST",
