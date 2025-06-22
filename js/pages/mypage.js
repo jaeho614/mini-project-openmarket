@@ -22,7 +22,6 @@ export function MyPage(stateManager) {
   }
 
   const { user } = stateManager.state;
-  console.log(user);
 
   document.getElementById("app").innerHTML = `
         ${createHeader(stateManager)}
