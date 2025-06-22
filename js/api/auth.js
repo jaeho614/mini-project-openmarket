@@ -55,29 +55,29 @@ export class AuthAPI {
     try {
       let response = await fetch(url, config);
 
-      const data = await response.json();
-      // console.log("SIGNUP_REQUEST_DATA :", data);
-
-      // 핸드폰중복 확인...(수정필요..!)
-      if (data.phone_number && !response.ok) {
-        throw new Error(
-          data.phone_number || `HTTP error! status: ${response.status}`
-        );
-      }
-
-      if (data.company_registration_number && !response.ok) {
-        throw new Error(
-          data.company_registration_number ||
-            `HTTP error! status: ${response.status}`
-        );
-      }
-
       if (response.status === 401 && AuthManager.getRefreshToken()) {
         const newToken = await this.refreshToken();
         if (newToken) {
           config.headers["Authorization"] = `Bearer ${newToken}`;
           response = await fetch(url, config);
         }
+      }
+
+      const data = await response.json();
+
+      // 핸드폰 중복 확인
+      if (data.phone_number && !response.ok) {
+        throw new Error(
+          data.phone_number || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      // 사업자번호 중복 확인
+      if (data.company_registration_number && !response.ok) {
+        throw new Error(
+          data.company_registration_number ||
+            `HTTP error! status: ${response.status}`
+        );
       }
 
       if (!response.ok) {

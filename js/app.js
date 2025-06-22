@@ -8,6 +8,7 @@ import { HomePage } from "./pages/home.js";
 import { LoginPage } from "./pages/login.js";
 import { SignupPage } from "./pages/signup.js";
 import { MyPage } from "./pages/mypage.js";
+import { ProductDetailPage } from "./pages/productDetail.js"; // 추가
 
 class App {
   constructor() {
@@ -72,6 +73,7 @@ class App {
     this.router.addRoute("/login", LoginPage);
     this.router.addRoute("/signup", SignupPage);
     this.router.addRoute("/mypage", MyPage);
+    this.router.addRoute("/product", ProductDetailPage);
   }
 
   setupGlobalEvents() {

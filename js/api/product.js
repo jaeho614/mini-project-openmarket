@@ -30,16 +30,22 @@ export class ProductAPI {
     return await response.json();
   }
 
-  // 상품 상세 조회 (필요시 사용)
+  // 상품 상세 조회 (수정됨)
   static async getProduct(productId) {
-    const response = await fetch(`${this.baseURL}/products/${productId}/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${API_CONFIG.BASE_URL}/products/${productId}/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error("상품을 찾을 수 없습니다.");
+      }
       throw new Error(`상품 상세 조회 실패: ${response.status}`);
     }
 

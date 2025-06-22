@@ -501,7 +501,7 @@ function initButtonStateManagement() {
     }
   });
 
-  // 전화번호 select도 추가
+  // 전화번호 select
   const phonePrefix = document.getElementById("phone-prefix");
   if (phonePrefix) {
     phonePrefix.addEventListener("change", checkFormCompletion);
@@ -542,13 +542,13 @@ function checkFormCompletion() {
 
   if (!signupBtn) return;
 
-  // 1. 모든 필수 필드가 입력되었는지 확인
+  // 모든 필수 필드가 입력되었는지 확인
   const allFieldsFilled = checkAllFieldsFilled(userType);
 
-  // 2. 모든 유효성 검사가 통과되었는지 확인
+  // 모든 유효성 검사가 통과되었는지 확인
   const allValidationsPassed = checkAllValidationsPassed(userType);
 
-  // 3. 동의 체크박스가 체크되었는지 확인
+  // 동의 체크박스가 체크되었는지 확인
   const agreementChecked =
     document.getElementById("agreement")?.checked || false;
 
@@ -801,7 +801,7 @@ async function handleSignup(e, stateManager) {
     } else {
       response = await AuthAPI.signupSeller(userData);
     }
-
+    console.log("회원가입 response", response);
     alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
 
     // 로그인 페이지로 이동

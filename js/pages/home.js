@@ -234,13 +234,13 @@ async function loadProducts(stateManager, page = 1) {
   }
 }
 
-// 상품 카드 생성 함수
+// 상품 카드 생성 함수 (수정됨 - 상품 상세 페이지로 이동)
 function createProductCard(product) {
   const card = document.createElement("div");
   card.className =
     "bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer";
   card.onclick = () => {
-    // 상품 상세 페이지로 이동
+    // 상품 상세 페이지로 이동 (/product/123 형태)
     window.router.navigate(`/product/${product.id}`);
   };
 

@@ -5,21 +5,14 @@ import { AuthManager } from "../utils/auth.js";
 import { LoginValidator } from "../utils/validation.js";
 import { MESSAGES } from "../constants/messages.js";
 import { createButton } from "../components/buttonComponent.js";
+import { redirectStorage } from "../utils/storage.js";
 
 export function LoginPage(stateManager) {
   if (AuthManager.isAuthenticated()) {
     alert(MESSAGES.ERROR.ALREADY_LOGIN);
-    window.history.replaceState(
-      null,
-      "",
-      window.location.pathname + window.location.search + "#/"
-    );
-    window.router.currentRoute = "/";
 
-    setTimeout(() => {
-      window.router.handleRoute();
-    }, 0);
-
+    // 이미 로그인된 경우 저장된 리다이렉트 URL로 이동하거나 홈으로 이동
+    redirectStorage.redirectAfterLogin(window.router, "/");
     return;
   }
 
@@ -159,9 +152,9 @@ async function handleLogin(e, stateManager) {
     AuthManager.setUser(response.user);
     stateManager.setUser(response.user);
 
-    window.router.navigate("/");
+    // 로그인 성공 시 저장된 페이지로 리다이렉트 또는 홈으로 이동
+    redirectStorage.redirectAfterLogin(window.router, "/");
   } catch (error) {
-    // API 에러 표시
     showLoginErrorMessage(error.message);
   }
 }
