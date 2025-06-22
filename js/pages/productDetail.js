@@ -76,18 +76,18 @@ function renderProductDetailHTML() {
             </div>
             
             <!-- 수량 선택 -->
-            <div class="flex items-center h-[110px] mb-[32px] border border-t border-b border-gray-900">
+            <div class="flex items-center h-[110px] mb-[32px]" style="border-top: solid 2px #C4C4C4; border-bottom: solid 2px #C4C4C4;">
               <div class="flex items-center border border-gray-300 rounded-lg w-fit">
-                <button id="quantity-minus" class="w-12 h-12 flex items-center justify-center hover:bg-gray-100 border-[2px] border-gray transition-colors font-medium text-3xl leading-none">
+                <button id="quantity-minus" class="w-12 h-12 flex items-center justify-center hover:bg-gray-100 border-[2px] rounded-l-[5px] border-gray-400 transition-colors font-medium text-3xl leading-none">
                   &#45;
                 </button>
                 <input 
                   type="text" 
                   id="quantity-input" 
                   value="1" 
-                  class="w-16 h-12 text-center border-0 border-t border-b border-gray-300 focus:outline-none focus:ring-0 text-lg font-medium"
+                  class="w-16 h-12 text-center focus:outline-none focus:ring-0 text-lg font-medium" style="border-top:solid 2px gray ; border-bottom: solid 2px gray;"
                 />
-                <button id="quantity-plus" class="w-12 h-12 flex items-center justify-center hover:bg-gray-100 border-[2px] border-gray transition-colors font-medium text-3xl leading-none">
+                <button id="quantity-plus" class="w-12 h-12 flex items-center justify-center hover:bg-gray-100 border-[2px] rounded-r-[5px] border-gray-400 transition-colors font-medium text-3xl leading-none">
                   &#43;
                 </button>
               </div>
@@ -96,7 +96,7 @@ function renderProductDetailHTML() {
             <!-- 총 상품 금액 -->
             <div class="border-t border-gray-200 mb-[22px]">
               <div class="flex justify-between items-end">
-                <span class="text-lg font-medium">총 상품 금액</span>
+                <span class="text-lg font-bold">총 상품 금액</span>
                 <div class="flex items-end text-right">
                   <div class="text-lg text-gray-500">총 수량 <span id="total-quantity" class="text-green-500 text-lg font-bold">1</span>개 <span class="mx-2 text-gray-400">|</span></div>
                   <div class="text-4xl font-bold text-green-600" id="total-price"></div>
@@ -104,7 +104,7 @@ function renderProductDetailHTML() {
               </div>
             </div>
             
-            <!-- 구매 버튼들 -->
+            <!-- 구매 버튼 -->
             <div class="flex gap-3">
               <button id="buy-now-btn" class="flex-1 bg-green-500 text-white py-4 rounded-lg text-lg font-medium hover:bg-green-600 transition-colors">
                 바로 구매
@@ -156,12 +156,12 @@ function renderProductDetailHTML() {
             <div id="tab-content-return" class="tab-content hidden">
               <div class="space-y-4 text-sm text-gray-600">
                 <h3 class="text-lg font-medium text-gray-900">반품/교환 정보</h3>
-                <div class="space-y-2">
-                  <p>• 상품 수령일로부터 7일 이내 반품/교환 가능합니다.</p>
-                  <p>• 단순 변심으로 인한 반품 시 배송비는 고객 부담입니다.</p>
-                  <p>• 상품 하자 시 무료 반품/교환 가능합니다.</p>
-                  <p>• 사용한 상품이나 포장을 개봉한 상품은 반품이 제한될 수 있습니다.</p>
-                </div>
+                <ul class="space-y-2">
+                  <li>- 상품 수령일로부터 7일 이내 반품/교환 가능합니다.</li>
+                  <li>- 단순 변심으로 인한 반품 시 배송비는 고객 부담입니다.</li>
+                  <li>- 상품 하자 시 무료 반품/교환 가능합니다.</li>
+                  <li>- 사용한 상품이나 포장을 개봉한 상품은 반품이 제한될 수 있습니다.</li>
+                </ul>
               </div>
             </div>
           </div>
