@@ -39,7 +39,7 @@ export function createSingUpPasswordInput(
           ${required ? "required" : ""}
         />
 				<div id="${id}-check-icon" class="absolute right-3 top-[33px] transform -translate-y-1/2 hidden">
-					<img src="../../assets/icons/icon-check-on.svg" alt="비밀번호 확인" class="w-6 h-6" />
+					<img src="./assets/icons/icon-check-on.svg" alt="비밀번호 확인" class="w-6 h-6" />
 				</div>
       </div>
     </div>
