@@ -5,6 +5,7 @@ export class loginRequestModal {
       "fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]";
     modal.innerHTML = `
       <div class="w-[360px] h-[200px] bg-white rounded-lg shadow-xl relative flex flex-col justify-between items-center" style="padding: 50px 75px 40px 75px;">
+
         <!-- X 버튼 -->
         <button class="modal-close absolute top-4 right-4 bg-transparent border-none cursor-pointer p-1">
           <img src="../../assets/icons/icon-delete.svg" alt="닫기" class="w-5 h-5 opacity-60 hover:opacity-100 transition-opacity duration-200">
@@ -72,8 +73,10 @@ export class loginRequestModal {
   // 로그인 모달 전용 메서드
   static loginConfirm(onConfirm) {
     return this.show(
-      `<p>로그인이 필요한 서비스입니다.</p>
-       <p>로그인 하시겠습니까?</p>`,
+      `
+        <p>로그인이 필요한 서비스입니다.</p>
+        <p>로그인 하시겠습니까?</p>
+      `,
       onConfirm
     );
   }
@@ -131,14 +134,6 @@ export class MyPageModal {
 
     // 이벤트 리스너 등록
     const setupEventListeners = () => {
-      // 메뉴 아이템 클릭 이벤트
-      // const menuItems = modal.querySelector(".mypage-menu-item");
-      // menuItems.addEventListener("click", () => {
-      //   const text = menuItems.textContent.trim();
-      //   alert(`"${text}" 기능은 준비 중입니다.`);
-      //   this.close();
-      // });
-
       // 로그아웃 버튼 클릭 이벤트
       const logoutBtn = modal.querySelector("#logout-btn");
       logoutBtn.addEventListener("click", () => {
@@ -184,7 +179,7 @@ export class MyPageModal {
   static close() {
     const modal = document.querySelector(".mypage-modal");
     if (modal) {
-      // cleanup 이벤트 발생
+      // cleanup
       modal.dispatchEvent(new CustomEvent("modal-cleanup"));
       modal.remove();
     }

@@ -21,7 +21,7 @@ export function HomePage(stateManager) {
     <!-- 메인 캐러셀 -->
     <section class="relative bg-gray-100 h-64 overflow-hidden">
       <div class="carousel-container relative w-full h-full">
-        <!-- 캐러셀 슬라이드들 -->
+        <!-- 캐러셀 슬라이드 -->
         <div id="carousel-track" class="flex transition-transform duration-300 ease-in-out h-full">
           ${carouselSlides
             .map(

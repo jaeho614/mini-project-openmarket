@@ -89,6 +89,7 @@ export class AuthAPI {
     }
   }
 
+  // JWT 토큰 갱신
   static async refreshToken() {
     try {
       const refreshToken = AuthManager.getRefreshToken();

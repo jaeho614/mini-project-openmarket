@@ -30,6 +30,7 @@ export function createHeader(stateManager) {
     <header class="bg-white shadow-md border-b">
       <div class="max-w-7xl mx-auto px-4 py-5 flex justify-between items-center">
         <div class="flex items-center space-x-6">
+
           <!-- LOGO -->
           <a href="#/" style="cursor: pointer;">
             <img class="h-8" src="./assets/images/Logo-hodu.png" alt="HODU" />
@@ -38,7 +39,7 @@ export function createHeader(stateManager) {
           <!-- 검색창 -->
           <div class="relative w-72">
             <input type="text" placeholder="상품을 검색해보세요!"
-                  class="w-full py-2 pl-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-400" />
+              class="w-full py-2 pl-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-400" />
             <button class="absolute right-3 top-2.5 text-gray-400">
               <img src="./assets/images/search.png" alt="검색" class="w-5 h-5"/>
             </button>
@@ -47,6 +48,7 @@ export function createHeader(stateManager) {
 
         <!-- 우측 네비게이션 -->
         <div class="flex space-x-6 text-sm text-gray-700">
+
           <!-- 장바구니 -->
           <a href="#/cart" class="group hover:text-green-600 flex flex-col items-center justify-center text-gray-700">
             <img src="./assets/icons/icon-shopping-cart.svg" alt="장바구니" class="block group-hover:hidden w-6 h-6" />
@@ -95,6 +97,7 @@ export function createHeader(stateManager) {
   `;
 }
 
+// logout
 window.handleLogoutAndReload = function () {
   window.handleLogout();
 
