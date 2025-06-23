@@ -8,7 +8,7 @@ export class loginRequestModal {
 
         <!-- X 버튼 -->
         <button class="modal-close absolute top-4 right-4 bg-transparent border-none cursor-pointer p-1">
-          <img src="../../assets/icons/icon-delete.svg" alt="닫기" class="w-5 h-5 opacity-60 hover:opacity-100 transition-opacity duration-200">
+          <img src="./assets/icons/icon-delete.svg" alt="닫기" class="w-5 h-5 opacity-60 hover:opacity-100 transition-opacity duration-200">
         </button>
 
         <!-- 모달 텍스트 -->
@@ -117,9 +117,7 @@ export class MyPageModal {
         <div class="p-4 pt-6">
           <!-- 마이페이지 메뉴 -->
           <div class="space-y-3">
-  
             <a href="#/mypage" class="mypage-menu-item w-full text-left text-sm text-gray-700 hover:text-green-600 hover:bg-gray-50 px-2 py-2 rounded transition-colors flex items-center">마이페이지</a>
-
             <div class="border-t border-gray-200 pt-2">
               <button id="logout-btn" class="w-full text-left text-sm text-red-600 hover:text-red-700 hover:bg-red-50 px-2 py-2 rounded transition-colors flex items-center">
                 로그아웃
@@ -179,7 +177,6 @@ export class MyPageModal {
   static close() {
     const modal = document.querySelector(".mypage-modal");
     if (modal) {
-      // cleanup
       modal.dispatchEvent(new CustomEvent("modal-cleanup"));
       modal.remove();
     }
