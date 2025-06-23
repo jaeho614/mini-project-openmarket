@@ -21,15 +21,16 @@ export function HomePage(stateManager) {
     <!-- 메인 캐러셀 -->
     <section class="relative bg-gray-100 h-64 overflow-hidden">
       <div class="carousel-container relative w-full h-full">
+
         <!-- 캐러셀 슬라이드 -->
         <div id="carousel-track" class="flex transition-transform duration-300 ease-in-out h-full">
           ${carouselSlides
             .map(
               slide => `
-            <div class="carousel-slide min-w-full h-full ${slide.bgColor} flex items-center justify-center">
-              <p class="text-gray-500">${slide.title}</p>
-            </div>
-          `
+                <div class="carousel-slide min-w-full h-full ${slide.bgColor} flex items-center justify-center">
+                  <p class="text-gray-500">${slide.title}</p>
+                </div>
+              `
             )
             .join("")}
         </div>
@@ -49,8 +50,8 @@ export function HomePage(stateManager) {
         ${carouselSlides
           .map(
             (_, index) => `
-          <button class="carousel-indicator w-2 h-2 rounded-full bg-black bg-opacity-60 hover:bg-opacity-100 transition-all duration-300" data-slide="${index}"></button>
-        `
+              <button class="carousel-indicator w-2 h-2 rounded-full bg-black bg-opacity-60 hover:bg-opacity-100 transition-all duration-300" data-slide="${index}"></button>
+            `
           )
           .join("")}
       </div>
@@ -58,6 +59,7 @@ export function HomePage(stateManager) {
 
     <!-- 상품 목록 섹션 -->
     <main class="max-w-7xl mx-auto px-4 py-8">
+
       <!-- 로딩 상태 -->
       <div id="products-loading" class="text-center py-8">
         <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
@@ -73,11 +75,10 @@ export function HomePage(stateManager) {
       </div>
       
       <!-- 상품 목록 -->
-      <div id="products-container" class="hidden">        
+      <div id="products-container" class="hidden"> 
+
         <!-- 상품 그리드 -->
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          <!-- 상품 카드들이 여기에 동적으로 추가됩니다 -->
-        </div>
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
         
         <!-- 더 보기 버튼 -->
         <div id="load-more-container" class="text-center mt-8 hidden">
@@ -98,15 +99,17 @@ export function HomePage(stateManager) {
 
   // 캐러셀 초기화 (배열 데이터 전달)
   initCarousel(carouselSlides);
+
   // 상품 목록 로드
   loadProducts(stateManager);
+
+  // footer 이벤트
   attachFooterEvents();
 }
 
 // 캐러셀 기능 구현
 function initCarousel(slidesData) {
   let currentSlide = 0;
-  const slides = document.querySelectorAll(".carousel-slide");
   const indicators = document.querySelectorAll(".carousel-indicator");
   const track = document.getElementById("carousel-track");
   const totalSlides = slidesData.length;
@@ -228,19 +231,17 @@ async function loadProducts(stateManager, page = 1) {
         loadProducts(stateManager);
       });
     } else {
-      // 추가 로딩 실패 시 토스트 메시지
       alert("추가 상품을 불러오는데 실패했습니다.");
     }
   }
 }
 
-// 상품 카드 생성 함수 (수정됨 - 상품 상세 페이지로 이동)
+// 상품 카드 생성
 function createProductCard(product) {
   const card = document.createElement("div");
   card.className =
     "bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer";
   card.onclick = () => {
-    // 상품 상세 페이지로 이동 (/product/123 형태)
     window.router.navigate(`/product/${product.id}`);
   };
 
